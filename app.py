@@ -57,7 +57,8 @@ if uploaded_file:
                 X, y, test_size=test_size, random_state=int(random_state)
             )
             le = LabelEncoder()
-            y_train_encoded = le.fit_transform(y_train)
+            y_train = le.fit_transform(y_train)
+            y_test = le.transform(y_test)
 
             # Train
             classifier = XGBClassifier(
@@ -65,10 +66,10 @@ if uploaded_file:
                 max_depth=max_depth,
                 learning_rate=learning_rate,
                 use_label_encoder=False,
-                eval_metric="logloss",
+                eval_metric="mlogloss",
                 random_state=int(random_state)
             )
-            classifier.fit(X_train, y_train_encoded)
+            classifier.fit(X_train, y_train)
 
             # Predict
             y_pred = classifier.predict(X_test)
