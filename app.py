@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import confusion_matrix, accuracy_score
 from xgboost import XGBClassifier
@@ -52,25 +51,31 @@ if uploaded_file:
     if st.button("Train XGBoost", type="primary", use_container_width=True):
         with st.spinner("Training..."):
 
+            # Split
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=int(random_state)
+            )
 
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
-            le = LabelEncoder()
-            y_train_encoded = le.fit_transform(y_train)
-            classifier = XGBClassifier()
-            classifier.fit(X_train, y_train_encoded)
+            # Train
+            classifier = XGBClassifier(
+                n_estimators=n_estimators,
+                max_depth=max_depth,
+                learning_rate=learning_rate,
+                use_label_encoder=False,
+                eval_metric="logloss",
+                random_state=int(random_state)
+            )
+            classifier.fit(X_train, y_train)
 
+            # Predict
             y_pred = classifier.predict(X_test)
+            acc = accuracy_score(y_test, y_pred)
             cm = confusion_matrix(y_test, y_pred)
-            print(cm)
-            accuracy_score(y_test, y_pred)
 
-            accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
-            print("Accuracy: {:.2f} %".format(accuracies.mean()*100))
-            print("Standard Deviation: {:.2f} %".format(accuracies.std()*100))
-
-            
-
-            
+            # Cross-val
+            cv_scores = cross_val_score(
+                estimator=classifier, X=X_train, y=y_train, cv=cv_folds
+            )
 
         st.subheader("3. Results")
 
