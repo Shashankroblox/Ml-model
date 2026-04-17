@@ -56,18 +56,11 @@ if uploaded_file:
                 X, y, test_size=test_size, random_state=int(random_state)
             )
 
-            from sklearn.preprocessing import LabelEncoder
-            le = LabelEncoder()
-            y_train = le.fit_transform(y_train)
+            # from sklearn.preprocessing import LabelEncoder
+            # le = LabelEncoder()
+            # y_train = le.fit_transform(y_train)
             # Train
-            classifier = XGBClassifier(
-                n_estimators=n_estimators,
-                max_depth=max_depth,
-                learning_rate=learning_rate,
-                use_label_encoder=False,
-                eval_metric="logloss",
-                random_state=int(random_state)
-            )
+            classifier = XGBClassifier()
             classifier.fit(X_train, y_train)
 
             # Predict
@@ -76,9 +69,10 @@ if uploaded_file:
             cm = confusion_matrix(y_test, y_pred)
 
             # Cross-val
-            cv_scores = cross_val_score(
-                estimator=classifier, X=X_train, y=y_train, cv=cv_folds
-            )
+            from sklearn.model_selection import cross_val_score
+            accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
+            print("Accuracy: {:.2f} %".format(accuracies.mean()*100))
+            print("Standard Deviation: {:.2f} %".format(accuracies.std()*100))
 
         st.subheader("3. Results")
 
