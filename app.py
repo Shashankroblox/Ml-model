@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import confusion_matrix, accuracy_score
@@ -55,6 +56,8 @@ if uploaded_file:
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=test_size, random_state=int(random_state)
             )
+            le = LabelEncoder()
+            y_train_encoded = le.fit_transform(y_train)
 
             # Train
             classifier = XGBClassifier(
@@ -65,7 +68,7 @@ if uploaded_file:
                 eval_metric="logloss",
                 random_state=int(random_state)
             )
-            classifier.fit(X_train, y_train)
+            classifier.fit(X_train, y_train_encoded)
 
             # Predict
             y_pred = classifier.predict(X_test)
