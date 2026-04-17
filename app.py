@@ -56,6 +56,9 @@ if uploaded_file:
                 X, y, test_size=test_size, random_state=int(random_state)
             )
 
+            from sklearn.preprocessing import LabelEncoder
+            le = LabelEncoder()
+            y_train = le.fit_transform(y_train)
             # Train
             classifier = XGBClassifier(
                 n_estimators=n_estimators,
