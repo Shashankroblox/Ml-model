@@ -94,6 +94,5 @@ Ml-model/
 
 ## Author
 
-**Shashank Chakravarti**  
-B.Tech CSE (IoT & Cybersecurity) — Lakshmi Naraian College of Technology, Bhopal  
-[LeetCode](https://leetcode.com/u/Shashankroblox/) | [GitHub](https://github.com/Shashankroblox)
+**Shashank Chakravarti**   
+[GitHub](https://github.com/Shashankroblox)
